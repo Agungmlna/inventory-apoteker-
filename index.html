@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b806d">
+  <title>Gudang Apotek — Sistem Persediaan</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#dashboard" aria-label="Gudang Apotek beranda">
+        <span class="brand-mark">✚</span>
+        <span><strong>Medistock</strong><small>GUDANG APOTEK</small></span>
+      </a>
+      <div class="side-label">MENU UTAMA</div>
+      <nav class="main-nav" aria-label="Navigasi utama">
+        <button class="nav-link active" data-page="dashboard"><span class="nav-icon">▦</span>Dashboard</button>
+        <button class="nav-link" data-page="inventory"><span class="nav-icon">▤</span>Data Barang</button>
+        <button class="nav-link" data-page="movements"><span class="nav-icon">⇄</span>Barang Masuk / Keluar</button>
+        <button class="nav-link menu-action" data-action="out"><span class="nav-icon">↗</span>Barang Keluar</button>
+        <button class="nav-link menu-action" data-action="cashier"><span class="nav-icon">▣</span>Kasir / Penjualan</button>
+        <button class="nav-link" data-page="reports"><span class="nav-icon">▧</span>Laporan</button></nav><div class="sidebar-bottom">
+        <div class="sidebar-note"><span class="note-icon">ⓘ</span><div><strong>Catatan stok</strong><p>Periksa tanggal kedaluwarsa secara berkala untuk menjaga kualitas obat.</p></div></div>
+        <div class="user-profile"><div class="avatar">A</div><div><strong>Admin Apotek</strong><small>Administrator</small></div></div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button class="mobile-menu" id="mobileMenu" aria-label="Buka menu">☰</button>
+        <div class="breadcrumb"><span>Gudang Apotek</span><b>/</b><strong id="pageTitle">Dashboard</strong></div>
+        <div class="topbar-right"><span class="today-chip"><span class="green-dot"></span><span id="todayLabel"></span></span><button class="button button-primary top-add" id="topAddBtn">＋ Tambah Barang</button></div>
+      </header>
+
+      <div class="page-wrap">
+        <section class="page active" id="page-dashboard">
+          <div class="page-heading"><div><p class="eyebrow">RINGKASAN PERSEDIAAN</p><h1>Dashboard</h1><p class="subheading">Pantau kondisi stok dan aktivitas gudang apotek Anda.</p></div><button class="button button-outline" id="dashboardReportBtn">Lihat laporan <span>→</span></button></div>
+          <div class="stats-grid">
+            <article class="stat-card"><div class="stat-top"><span class="stat-icon teal">▤</span><span class="stat-caption">Semua item</span></div><div class="stat-value" id="statItems">0</div><div class="stat-foot">jenis barang terdaftar</div></article>
+            <article class="stat-card"><div class="stat-top"><span class="stat-icon blue">▣</span><span class="stat-caption">Total stok</span></div><div class="stat-value" id="statStock">0</div><div class="stat-foot">unit tersedia di gudang</div></article>
+            <article class="stat-card"><div class="stat-top"><span class="stat-icon amber">◷</span><span class="stat-caption">Segera kedaluwarsa</span></div><div class="stat-value" id="statExpiring">0</div><div class="stat-foot">kedaluwarsa dalam 30 hari</div></article>
+            <article class="stat-card"><div class="stat-top"><span class="stat-icon red">!</span><span class="stat-caption">Sudah kedaluwarsa</span></div><div class="stat-value" id="statExpired">0</div><div class="stat-foot">perlu segera ditindaklanjuti</div></article>
+          </div>
+          <div class="dashboard-grid">
+            <section class="panel inventory-panel"><div class="panel-heading"><div><h2>Perlu perhatian</h2><p>Barang kedaluwarsa dan yang segera kedaluwarsa</p></div><button class="text-button" data-go="inventory">Semua barang →</button></div><div class="table-wrap"><table><thead><tr><th>NAMA BARANG</th><th>KATEGORI</th><th>STOK</th><th>TANGGAL KEDALUWARSA</th><th>STATUS</th></tr></thead><tbody id="attentionTable"></tbody></table><div class="empty-state hidden" id="attentionEmpty"><span>✓</span><strong>Semua aman</strong><p>Tidak ada barang yang perlu perhatian saat ini.</p></div></div></section>
+            <section class="panel activity-panel"><div class="panel-heading"><div><h2>Aktivitas terakhir</h2><p>Catatan pergerakan stok terbaru</p></div><button class="text-button" data-go="movements">Lihat semua →</button></div><div class="activity-list" id="recentActivity"></div><div class="empty-state hidden compact" id="activityEmpty"><span>↔</span><strong>Belum ada aktivitas</strong><p>Transaksi barang masuk dan keluar akan tampil di sini.</p></div></section>
+          </div>
+        </section>
+
+        <section class="page" id="page-inventory">
+          <div class="page-heading"><div><p class="eyebrow">PENGELOLAAN PERSEDIAAN</p><h1>Data Barang</h1><p class="subheading">Kelola stok, kategori, dan tanggal kedaluwarsa obat.</p></div><button class="button button-primary" id="addItemBtn">＋ Tambah Barang</button></div>
+          <section class="panel"><div class="toolbar"><label class="search-box"><span>⌕</span><input id="inventorySearch" type="search" placeholder="Cari nama barang, kategori, atau batch..."></label><select id="statusFilter" aria-label="Filter status"><option value="all">Semua status</option><option value="safe">Masih aman</option><option value="soon">Segera kedaluwarsa</option><option value="expired">Kedaluwarsa</option><option value="low">Stok menipis</option></select><button class="button button-outline" id="inventoryCsv">↓ Ekspor CSV</button></div><div class="table-wrap"><table><thead><tr><th>NAMA BARANG</th><th>KATEGORI</th><th>NO. BATCH</th><th>STOK</th><th>KEDALUWARSA</th><th>STATUS</th><th></th></tr></thead><tbody id="inventoryTable"></tbody></table><div class="empty-state hidden" id="inventoryEmpty"><span>▤</span><strong>Barang tidak ditemukan</strong><p>Tambahkan barang baru atau ubah kata kunci pencarian.</p></div></div><div class="table-footer" id="inventoryCount"></div></section>
+        </section>
+
+        <section class="page" id="page-movements">
+          <div class="page-heading"><div><p class="eyebrow">MUTASI PERSEDIAAN</p><h1>Barang Masuk / Keluar</h1><p class="subheading">Catat penerimaan barang dan lihat riwayat semua pergerakan stok.</p></div><div class="heading-actions"><button class="button button-primary" id="inBtn">＋ Barang Masuk</button></div></div>
+          <section class="panel"><div class="toolbar"><label class="search-box"><span>⌕</span><input id="movementSearch" type="search" placeholder="Cari nama barang atau keterangan..."></label><select id="movementTypeFilter" aria-label="Filter jenis transaksi"><option value="all">Semua transaksi</option><option value="in">Barang masuk</option><option value="out">Barang keluar</option></select><input class="date-filter" type="date" id="movementDateFilter" aria-label="Filter tanggal"></div><div class="table-wrap"><table><thead><tr><th>TANGGAL</th><th>NAMA BARANG</th><th>JENIS</th><th>JUMLAH</th><th>HARGA / UNIT</th><th>TOTAL</th><th>NO. BATCH</th><th>KETERANGAN</th></tr></thead><tbody id="movementTable"></tbody></table><div class="empty-state hidden" id="movementEmpty"><span>⇄</span><strong>Belum ada transaksi</strong><p>Catat barang masuk atau keluar untuk melihat riwayatnya.</p></div></div><div class="table-footer" id="movementCount"></div></section>
+        </section>
+
+        <section class="page" id="page-reports">
+          <div class="page-heading"><div><p class="eyebrow">ANALISIS PERSEDIAAN</p><h1>Laporan</h1><p class="subheading">Ringkasan barang masuk, barang keluar, dan kondisi stok.</p></div><button class="button button-primary" id="reportCsv">↓ Unduh laporan CSV</button></div>
+          <div class="report-filter panel"><div><strong>Periode laporan transaksi</strong><small>Pilih rentang tanggal untuk menyaring laporan.</small></div><div class="date-range"><label>Dari <input type="date" id="reportFrom"></label><label>Sampai <input type="date" id="reportTo"></label><button class="button button-outline" id="applyReport">Terapkan</button><button class="button button-ghost" id="clearReport">Reset</button></div></div>
+          <div class="stats-grid report-stats"><article class="stat-card"><div class="stat-top"><span class="stat-icon teal">↓</span><span class="stat-caption">Barang masuk</span></div><div class="stat-value" id="reportIn">0</div><div class="stat-foot">unit dalam periode terpilih</div></article><article class="stat-card"><div class="stat-top"><span class="stat-icon red">↑</span><span class="stat-caption">Barang keluar</span></div><div class="stat-value" id="reportOut">0</div><div class="stat-foot">unit dalam periode terpilih</div></article><article class="stat-card"><div class="stat-top"><span class="stat-icon blue">⇄</span><span class="stat-caption">Jumlah transaksi</span></div><div class="stat-value" id="reportTransactions">0</div><div class="stat-foot">transaksi dalam periode terpilih</div></article><article class="stat-card"><div class="stat-top"><span class="stat-icon amber">Rp</span><span class="stat-caption">Omzet penjualan</span></div><div class="stat-value currency-value" id="reportRevenue">Rp0</div><div class="stat-foot">total penjualan kasir</div></article></div>
+          <section class="panel report-panel"><div class="panel-heading"><div><h2>Detail transaksi</h2><p id="reportPeriodLabel">Semua riwayat transaksi</p></div></div><div class="table-wrap"><table><thead><tr><th>TANGGAL</th><th>NAMA BARANG</th><th>JENIS</th><th>JUMLAH</th><th>HARGA / UNIT</th><th>TOTAL</th><th>NO. BATCH</th><th>KETERANGAN</th></tr></thead><tbody id="reportTable"></tbody></table><div class="empty-state hidden" id="reportEmpty"><span>▧</span><strong>Tidak ada transaksi</strong><p>Transaksi pada rentang tanggal ini akan tampil di sini.</p></div></div></section>
+          <section class="panel sales-panel"><div class="panel-heading"><div><h2>Struk penjualan</h2><p>Transaksi kasir yang dapat dicetak ulang</p></div></div><div class="table-wrap"><table><thead><tr><th>TANGGAL</th><th>NO. STRUK</th><th>PELANGGAN</th><th>ITEM</th><th>TOTAL</th><th></th></tr></thead><tbody id="salesTable"></tbody></table><div class="empty-state hidden" id="salesEmpty"><strong>Belum ada penjualan</strong><p>Transaksi kasir akan tampil di sini.</p></div></div></section>
+        </section>
+      </div>
+      <footer class="app-footer">© <span id="yearNow"></span> Medistock · Sistem Persediaan Gudang Apotek</footer>
+    </main>
+  </div>
+
+  <div class="modal-backdrop hidden" id="itemModal" role="dialog" aria-modal="true" aria-labelledby="itemModalTitle"><form class="modal" id="itemForm"><div class="modal-header"><div><p class="eyebrow">DATA PERSEDIAAN</p><h2 id="itemModalTitle">Tambah Barang</h2></div><button type="button" class="icon-button" data-close="itemModal" aria-label="Tutup">×</button></div><input type="hidden" id="itemId"><div class="form-grid"><label class="field full">Nama barang <span>*</span><input id="itemName" required maxlength="80" placeholder="Contoh: Paracetamol 500 mg"></label><label class="field">Kategori <span>*</span><input id="itemCategory" required maxlength="50" placeholder="Contoh: Analgesik"></label><label class="field">No. batch<input id="itemBatch" maxlength="40" placeholder="Contoh: PCT-2401"></label><label class="field">Jumlah stok <span>*</span><input id="itemStock" required type="number" min="0" step="1" placeholder="0"></label><label class="field">Satuan <span>*</span><select id="itemUnit" required><option value="strip">Strip</option><option value="pcs">Pcs</option><option value="botol">Botol</option><option value="box">Box</option><option value="kapsul">Kapsul</option><option value="tablet">Tablet</option><option value="tube">Tube</option><option value="pak">Pak</option></select></label><label class="field full">Harga jual per satuan (Rp) <span>*</span><input id="itemPrice" type="number" min="0" step="1" required placeholder="Contoh: 5000"></label><label class="field full">Tanggal kedaluwarsa<input id="itemExpiry" type="date"><small>Kosongkan jika tidak berlaku.</small></label></div><div class="modal-actions"><button type="button" class="button button-outline" data-close="itemModal">Batal</button><button type="submit" class="button button-primary">Simpan Barang</button></div></form></div>
+
+  <div class="modal-backdrop hidden" id="movementModal" role="dialog" aria-modal="true" aria-labelledby="movementModalTitle"><form class="modal" id="movementForm"><div class="modal-header"><div><p class="eyebrow" id="movementEyebrow">CATAT MUTASI STOK</p><h2 id="movementModalTitle">Barang Masuk</h2></div><button type="button" class="icon-button" data-close="movementModal" aria-label="Tutup">×</button></div><input type="hidden" id="movementType" value="in"><div class="form-grid"><label class="field full">Pilih barang <span>*</span><select id="movementProduct" required></select></label><label class="field">Jumlah <span>*</span><input id="movementQty" type="number" required min="1" step="1" placeholder="0"></label><label class="field">Tanggal transaksi <span>*</span><input id="movementDate" type="date" required></label><label class="field full" id="movementBatchWrap">No. batch<input id="movementBatch" maxlength="40" placeholder="Nomor batch barang diterima"></label><label class="field full" id="movementExpiryWrap">Tanggal kedaluwarsa<input id="movementExpiry" type="date"><small>Opsional. Jika diisi, stok masuk dibuat sebagai batch terpisah.</small></label><label class="field full">Keterangan<input id="movementNote" maxlength="120" placeholder="Contoh: Penerimaan dari distributor"></label></div><div class="modal-actions"><button type="button" class="button button-outline" data-close="movementModal">Batal</button><button type="submit" class="button button-primary" id="saveMovementBtn">Simpan Transaksi</button></div></form></div>
+  <div class="modal-backdrop hidden" id="cashierModal" role="dialog" aria-modal="true" aria-labelledby="cashierTitle"><div class="modal cashier-modal"><div class="modal-header"><div><p class="eyebrow">TRANSAKSI PENJUALAN</p><h2 id="cashierTitle">Kasir</h2></div><button type="button" class="icon-button" data-close="cashierModal" aria-label="Tutup">×</button></div><div class="form-grid"><label class="field full">Nama pelanggan (opsional)<input id="cashierCustomer" maxlength="80" placeholder="Pelanggan umum"></label><label class="field full">Pilih barang <span>*</span><select id="cashierProduct"></select></label><label class="field">Jumlah <span>*</span><input id="cashierQty" type="number" min="1" step="1" value="1"></label><div class="cashier-add-wrap"><button type="button" class="button button-outline" id="addCartBtn">Tambah ke keranjang</button></div></div><div class="cart-wrap"><table><thead><tr><th>BARANG</th><th>HARGA</th><th>JUMLAH</th><th>SUBTOTAL</th><th></th></tr></thead><tbody id="cartTable"></tbody></table><div class="empty-state compact" id="cartEmpty"><strong>Keranjang masih kosong</strong><p>Pilih barang lalu tambahkan ke keranjang.</p></div></div><div class="cashier-total"><span>Total pembayaran</span><strong id="cartTotal">Rp0</strong></div><div class="modal-actions"><button type="button" class="button button-outline" data-close="cashierModal">Batal</button><button type="button" class="button button-primary" id="checkoutBtn">Bayar &amp; buat struk</button></div></div></div>
+  <div class="modal-backdrop hidden" id="receiptModal" role="dialog" aria-modal="true" aria-labelledby="receiptTitle"><div class="modal receipt-modal"><div class="modal-header no-print"><div><p class="eyebrow">BUKTI PEMBAYARAN</p><h2 id="receiptTitle">Struk Penjualan</h2></div><button type="button" class="icon-button" data-close="receiptModal" aria-label="Tutup">×</button></div><div id="receiptContent" class="receipt-content"></div><div class="modal-actions no-print"><button type="button" class="button button-outline" data-close="receiptModal">Tutup</button><button type="button" class="button button-primary" id="printReceiptBtn">Cetak struk</button></div></div></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
